@@ -1,0 +1,2 @@
+#!/bin/bash
+export TELEGRAM_BOT_TOKEN='5863077141:AAH9DyKEStsSBCipkycGkFGjl29x6fTjKiM'
