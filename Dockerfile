@@ -7,7 +7,10 @@ COPY go.mod ./
 RUN go mod download && go mod verify
 
 COPY . .
-RUN go build -v -o /usr/local/bin/notifier ./
+
+RUN echo "TZ='America/Sao_Paulo'; export TZ" >> ~/.profile && \
+    . ~/.profile && \
+    go build -v -o /usr/local/bin/notifier ./
 
 EXPOSE 8080
 
