@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	telegram "notifier/telegram"
+	"os"
 
 	"github.com/gorilla/mux"
 )
@@ -19,11 +20,15 @@ func main() {
 	*/
 	log.Println("Starting alertmanager...")
 
+	if os.Getenv("TELEGRAM_BOT_TOKEN") == "" {
+		log.Fatal("Telegram token não foi definido!\nVerifique se a varíavel TELEGRAM_BOT_TOKEN foi exportada/definida corretamente!")
+	}
+
 	router := mux.NewRouter()
 	router.HandleFunc("/telegram", telegram.SendTelegram).Methods("POST")
 	//router.HandleFunc("/sendmail", email.SendMail).Methods("POST")
 	http.Handle("/", router)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe("0.0.0.0:8080", nil))
 	//var recipients []string
 	//for _, mail := range os.Args {
 	//	recipients = append(recipients, mail)

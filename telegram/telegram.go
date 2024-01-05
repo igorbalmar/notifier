@@ -20,9 +20,6 @@ type ErrorMessage struct {
 
 func SendTelegram(w http.ResponseWriter, r *http.Request) {
 	token := os.Getenv("TELEGRAM_BOT_TOKEN")
-	if token == "" {
-		log.Fatal("Token não definido")
-	}
 	var errorMessage ErrorMessage
 	message := Message{}
 	err := json.NewDecoder(r.Body).Decode(&message)
