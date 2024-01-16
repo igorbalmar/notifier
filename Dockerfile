@@ -1,17 +1,24 @@
-FROM golang:alpine
+ARG GO_VERSION=1.21
 
-WORKDIR /usr/src/notifier
+FROM golang:${GO_VERSION}-alpine as build
+
+WORKDIR $GOPATH/build
 
 # pre-copy/cache go.mod for pre-downloading dependencies and only redownloading them in subsequent builds if they change
-COPY go.mod ./
+COPY go.mod .
 RUN go mod download && go mod verify
 
 COPY . .
+COPY main.go .
 
 RUN echo "TZ='America/Sao_Paulo'; export TZ" >> ~/.profile && \
     . ~/.profile && \
-    go build -v -o /usr/local/bin/notifier ./
+    go build -v -o notifier
 
-EXPOSE 8080
+FROM alpine
 
-CMD ["/usr/local/bin/notifier"]
+WORKDIR /usr/local/bin/
+
+COPY --from=build  /go/build/notifier /usr/local/bin/
+
+CMD [ "./notifier" ]
